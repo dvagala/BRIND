@@ -1,7 +1,5 @@
 
 
-
-
 import numpy as np
 import os
 import sys, time
@@ -23,7 +21,7 @@ def data_list_maker(img_dir='train_imgs/aug', gt_dir='train_gt/aug',use_all_data
     img_base_dir =img_dir
     gt_base_dir = gt_dir
     files_idcs = []
-    simple_list = True
+    simple_list = False
     if simple_list:
 
         for full_path in os.listdir(img_base_dir):
@@ -42,8 +40,8 @@ def data_list_maker(img_dir='train_imgs/aug', gt_dir='train_gt/aug',use_all_data
                     (os.path.join(img_dirs + '/' + file_name + '.jpg'),
                      os.path.join(gt_base_dir + '/' + dir_name + '/' + file_name + '.png'),))
     # save files
-    print(os.path.join(img_dir + '/' + file_name + '.jpg'))
-    print(os.path.join(gt_base_dir + '/' + '/' + file_name + '.png'))
+    print(os.path.join(img_dirs + '/' + file_name + '.jpg'))
+    print(os.path.join(gt_base_dir + '/' + dir_name + '/' + file_name + '.png'))
     # save_path = 'train_pair.lst' # less data
 
     save_path = 'train_pair_all.lst' if use_all_data else 'train_pair.lst'# all BIRND data
@@ -78,26 +76,21 @@ if __name__ == '__main__':
     dataset = 'BRIND'
     augment_both = True  # to augment the input and target
     use_all_data = True # for the whole BIRND data, False just a part of BIRND data
-    # augment_brind(base_dir=base_dir, augment_both=augment_both,
-    #               use_all_data=use_all_data, use_all_augs=True)
+    augment_brind(base_dir=base_dir, augment_both=augment_both,
+                  use_all_data=use_all_data, use_all_augs=True)
 
     # List maker
     print("Dataset list maker is going to run in 10 sec.")
-    # time.sleep(10)
+    time.sleep(10)
 
     dataset_name = 'BRIND'
-    # if use_all_data:
-    #     img_base_dir = 'train_imgs/aug_all' # all data
-    #     gt_base_dir = 'train_gt/aug_all'
-    # else:
-    #     img_base_dir = 'train_imgs/aug'  # all data
-    #     gt_base_dir = 'train_gt/aug'
-    img_base_dir = 'train_imgs/imgs_all'  # all data
-    gt_base_dir = 'train_gt/gt_all'
+    if use_all_data:
+        img_base_dir = 'train_imgs/aug_all' # all data
+        gt_base_dir = 'train_gt/aug_all'
+    else:
+        img_base_dir = 'train_imgs/aug'  # all data
+        gt_base_dir = 'train_gt/aug'
 
     data_list_maker(img_dir=img_base_dir,gt_dir=gt_base_dir,use_all_data=use_all_data)
-
-
-
 
 
