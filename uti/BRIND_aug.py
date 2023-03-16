@@ -334,10 +334,12 @@ def split_data(data_dir,data_source,augment_both=True):
         raise NotImplementedError('In single augmentation')
 
     x_list = os.listdir(os.path.join(img_dir, 'real'))
+    x_list = remove_ds_store(x_list)
     x_list.sort()
     n = len(x_list)
     if augment_both:
         gt_list = os.listdir(os.path.join(gt_dir, 'real'))
+        gt_list = remove_ds_store(gt_list)
         gt_list.sort()
         n = len(gt_list) if len(x_list) == len(gt_list) else 0
 
@@ -409,9 +411,11 @@ def rotate_data(data_dir, augment_both=True):
     X_dir = data_dir[0]
     GT_dir = data_dir[1]
     x_folders = os.listdir(X_dir)
+    x_folders = remove_ds_store(x_folders)
     x_folders.sort()
     if augment_both:
         gt_folders = os.listdir(GT_dir)
+        gt_folders = remove_ds_store(gt_folders)
         gt_folders.sort()
         if not x_folders ==gt_folders:
             raise NotImplementedError('gt and x folders not match')
@@ -425,10 +429,12 @@ def rotate_data(data_dir, augment_both=True):
     for folder_name in x_folders:
 
         x_aug_list = os.listdir(os.path.join(X_dir, folder_name))
+        x_aug_list = remove_ds_store(x_aug_list)
         x_aug_list.sort()
         n = len(x_aug_list)
         if augment_both:
             gt_aug_list = os.listdir(os.path.join(GT_dir, folder_name))
+            gt_aug_list = remove_ds_store(gt_aug_list)
             gt_aug_list.sort()
             n = len(gt_aug_list) if len(x_aug_list) == len(gt_aug_list) else None
 
@@ -467,6 +473,9 @@ def rotate_data(data_dir, augment_both=True):
                 tmp_gt = cv.imread(os.path.join(GT_dir,
                                                 os.path.join(folder_name, gt_aug_list[j]))) if augment_both else None
                 rot_x, rot_gt = rotated_img_extractor(tmp_x, tmp_gt, img_width, img_height, i, two_data=augment_both)
+                thresh = 60
+                rot_gt[rot_gt >= thresh] = 255
+                rot_gt[rot_gt < thresh] = 0
 
                 cv.imwrite(os.path.join(current_X_dir, x_aug_list[j]), rot_x)
                 tmp_imgs = rot_x
@@ -493,21 +502,25 @@ def flip_data(data_dir, augment_both=True):
     GT_dir = data_dir[1]
     type_aug = '_flip'
     dir_list = os.listdir(X_dir)
+    dir_list = remove_ds_store(dir_list)
     dir_list.sort()
     if augment_both:
         gt_folders = os.listdir(GT_dir)
+        gt_folders = remove_ds_store(gt_folders)
         gt_folders.sort()
         if not dir_list ==gt_folders:
             raise NotImplementedError('gt and x folders not match')
 
     for i in (dir_list):
         X_list = os.listdir(os.path.join(X_dir, i))
+        X_list = remove_ds_store(X_list)
         X_list.sort()
         save_dir_x = X_dir + '/' + str(i) + type_aug
         _=make_dirs(save_dir_x)
         n = len(X_list)
         if augment_both:
             GT_list = os.listdir(os.path.join(GT_dir, i))
+            GT_list = remove_ds_store(GT_list)
             GT_list.sort()
             save_dir_gt = GT_dir + '/' + str(i) + type_aug
             _= make_dirs(save_dir_gt)
@@ -536,6 +549,10 @@ def flip_data(data_dir, augment_both=True):
 
     print("... Flipping  data augmentation finished")
 
+
+def remove_ds_store(lst):
+    return list(filter(lambda e: '.DS_Store' not in e, lst))
+
 def gamma_data(data_dir,augment_both=True, in_gt=False):
 
     X_dir = data_dir[0]
@@ -544,14 +561,17 @@ def gamma_data(data_dir,augment_both=True, in_gt=False):
     gamma30 = '_ga30'
     gamma60 = '_ga60'
     dir_list = os.listdir(X_dir)
+    dir_list = remove_ds_store(dir_list)
     dir_list.sort()
     if augment_both:
         gt_folders = os.listdir(GT_dir)
+        gt_folders = remove_ds_store(dir_list)
         gt_folders.sort()
         if not dir_list ==gt_folders:
             raise NotImplementedError('gt and x folders not match')
     for i in (dir_list):
         X_list = os.listdir(os.path.join(X_dir, i))
+        X_list = remove_ds_store(X_list)
         X_list.sort()
         save_dir_x30 = X_dir + '/' + str(i) + gamma30
         save_dir_x60 = X_dir + '/' + str(i) + gamma60
@@ -560,6 +580,7 @@ def gamma_data(data_dir,augment_both=True, in_gt=False):
         n =len(X_list)
         if augment_both:
             GT_list = os.listdir(os.path.join(GT_dir, i))
+            GT_list = remove_ds_store(GT_list)
             GT_list.sort()
             save_dir_gt30 = GT_dir + '/' + str(i) + gamma30
             save_dir_gt60 = GT_dir + '/' + str(i) + gamma60
@@ -571,16 +592,16 @@ def gamma_data(data_dir,augment_both=True, in_gt=False):
             print("Working on the dir: ", os.path.join(X_dir, i))
         for j in range(n):
             x_tmp = cv.imread(os.path.join(X_dir, os.path.join(i, X_list[j])))
-            if not in_gt:
-                x_tmp = image_normalization(x_tmp,0,1)
-                x_tmp = gamma_correction(x_tmp, 0.4040, False)
-                gam30_x = gamma_correction(x_tmp, 0.3030, True)
-                gam60_x = gamma_correction(x_tmp, 0.6060, True)
-                gam30_x = np.uint8(image_normalization(gam30_x))
-                gam60_x = np.uint8(image_normalization(gam60_x))
-            else:
-                gam30_x=x_tmp
-                gam60_x = x_tmp
+            # if not in_gt:
+            x_tmp = image_normalization(x_tmp,0,1)
+            x_tmp = gamma_correction(x_tmp, 0.4040, False)
+            gam30_x = gamma_correction(x_tmp, 0.3030, True)
+            gam60_x = gamma_correction(x_tmp, 0.6060, True)
+            gam30_x = np.uint8(image_normalization(gam30_x))
+            gam60_x = np.uint8(image_normalization(gam60_x))
+            # else:
+            #     gam30_x=x_tmp
+            #     gam60_x = x_tmp
             if augment_both:
                 gt_tmp = cv.imread(os.path.join(GT_dir, os.path.join(i, GT_list[j])))
             cv.imwrite(os.path.join(save_dir_x30, X_list[j]), gam30_x)
@@ -612,14 +633,17 @@ def scale_data(data_dir,augment_both=True):
     scl1t = '_s05'
     scl2t = '_s15'
     dir_list = os.listdir(X_dir)
+    dir_list = remove_ds_store(dir_list)
     dir_list.sort()
     if augment_both:
         gt_list = os.listdir(GT_dir)
+        gt_folders = remove_ds_store(gt_folders)
         gt_list.sort()
         if not dir_list ==gt_list:
             raise NotImplementedError('gt and x folders not match')
     for i in (dir_list):
         X_list = os.listdir(os.path.join(X_dir, i))
+        X_list = remove_ds_store(X_list)
         X_list.sort()
         save_dir_s1 = X_dir + '/' + str(i) + scl1t
         save_dir_s2 = X_dir + '/' + str(i) + scl2t
@@ -628,6 +652,7 @@ def scale_data(data_dir,augment_both=True):
         n =len(X_list)
         if augment_both:
             GT_list = os.listdir(os.path.join(GT_dir, i))
+            GT_list = remove_ds_store(GT_list)
             GT_list.sort()
             save_dir_gts1 = GT_dir + '/' + str(i) + scl1t
             save_dir_gts2 = GT_dir + '/' + str(i) + scl2t
@@ -646,6 +671,11 @@ def scale_data(data_dir,augment_both=True):
                 gt_tmp = cv.imread(os.path.join(GT_dir, os.path.join(i, GT_list[j])))
                 gt_tmp1 = scale_img(gt_tmp, scl1)
                 gt_tmp2 = scale_img(gt_tmp, scl2)
+
+                thresh = 60
+                gt_tmp1[gt_tmp1 >= thresh] = 255
+                gt_tmp2[gt_tmp2 < thresh] = 0
+
             cv.imwrite(os.path.join(save_dir_s1, X_list[j]), x_tmp1)
             cv.imwrite(os.path.join(save_dir_s2, X_list[j]), x_tmp2)
             if augment_both:
