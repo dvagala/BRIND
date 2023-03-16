@@ -23,8 +23,11 @@ def data_list_maker(img_dir='train_imgs/aug', gt_dir='train_gt/aug',use_all_data
     files_idcs = []
     simple_list = False
     if simple_list:
-
         for full_path in os.listdir(img_base_dir):
+            if '.DS_Store'  in full_path:
+                continue
+
+            gt_folders = list(filter(lambda e: '.DS_Store' not in e, gt_folders))
             file_name = os.path.splitext(full_path)[0]
             files_idcs.append(
                 (os.path.join(img_base_dir + '/' + file_name + '.jpg'),
@@ -32,9 +35,13 @@ def data_list_maker(img_dir='train_imgs/aug', gt_dir='train_gt/aug',use_all_data
     # save files
     else:
         for dir_name in os.listdir(img_base_dir):
+            if '.DS_Store'  in dir_name:
+                continue
             # img_dirs = img_base_dir + '/' + dir_name
             img_dirs = img_base_dir + '/' + dir_name
             for full_path in os.listdir(img_dirs):
+                if '.DS_Store'  in full_path:
+                    continue
                 file_name = os.path.splitext(full_path)[0]
                 files_idcs.append(
                     (os.path.join(img_dirs + '/' + file_name + '.jpg'),
