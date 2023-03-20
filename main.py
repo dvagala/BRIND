@@ -62,7 +62,7 @@ def data_list_maker(img_dir='train_imgs/aug', gt_dir='train_gt/aug',use_all_data
     with open(save_path) as f:
         recov_data = json.load(f)
     idx = np.random.choice(200, 1)
-    tmp_files = recov_data[15]
+    tmp_files = recov_data[2]
     img = cv.imread(tmp_files[0])
     gt = cv.imread(tmp_files[1])
     print(f"Image size {img.shape}, file name {tmp_files[0]}")
