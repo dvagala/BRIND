@@ -748,18 +748,18 @@ def augment_brind(base_dir,augment_both,use_all_data, use_all_augs=True):
         if augment_both:
             shutil.copytree(os.path.join(gt_dir, gt0_dir), gt_aug_dir + '/real')
 
-    # if rotation:
-    #     print("Image augmentation by rotation has started!")
-    #     rotate_data(data_dir=dataset_dirs,augment_both=augment_both)
+    if rotation:
+        print("Image augmentation by rotation has started!")
+        rotate_data(data_dir=dataset_dirs,augment_both=augment_both)
 
-    # if flipping:
-    #     print("Image augmentation by flipping has started!")
-    #     flip_data(data_dir=dataset_dirs,augment_both=augment_both)
+    if flipping:
+        print("Image augmentation by flipping has started!")
+        flip_data(data_dir=dataset_dirs,augment_both=augment_both)
 
-    # if correction_gamma:
-    #     print("Image augmentation by gamma correction has started!")
-    #     gamma_data(data_dir=dataset_dirs, augment_both=augment_both, in_gt=augment_gt)
+    if correction_gamma:
+        print("Image augmentation by gamma correction has started!")
+        gamma_data(data_dir=dataset_dirs, augment_both=augment_both, in_gt=augment_gt)
 
-    # if image_scaling:
-    #     print("Data augmentation by image scaling has started!")
-    #     scale_data(data_dir=dataset_dirs, augment_both=augment_both)
+    if image_scaling:
+        print("Data augmentation by image scaling has started!")
+        scale_data(data_dir=dataset_dirs, augment_both=augment_both)
