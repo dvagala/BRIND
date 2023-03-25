@@ -3,6 +3,7 @@
 import os
 import random
 import shutil
+import argparse
 
 # Set the seed for the random sampling
 random.seed(42)
@@ -40,9 +41,13 @@ input_images = [f for f in os.listdir(path_to_input_images) if f.endswith(".jpg"
 # Shuffle the input images
 random.shuffle(input_images)
 
+parser = argparse.ArgumentParser(description='')
+parser.add_argument('train_test_ratio', type=int, help='train_test_ratio')
+args = parser.parse_args()
+
 # Split the input images into train and test sets
-train_input_images = input_images[:int(0.8 * len(input_images))]
-test_input_images = input_images[int(0.8 * len(input_images)):]
+train_input_images = input_images[:int(args.train_test_ratio * len(input_images))]
+test_input_images = input_images[int(args.train_test_ratio * len(input_images)):]
 
 # Copy the train input images to the train images folder
 for input_image in train_input_images:
