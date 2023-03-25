@@ -10,7 +10,7 @@ echo "tresholding edges done"
 python3 split_into_train_and_test.py 0.8
 echo "spliting into train and test done"
 
-python3 augment_train_data.py 20
+python3 augment_train_data.py 90
 echo "augmenting train data done"
 
 python3 generate_lst_file_for_ldc.py
