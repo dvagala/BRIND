@@ -87,8 +87,7 @@ if __name__ == '__main__':
                   use_all_data=use_all_data, use_all_augs=True)
 
     # List maker
-    print("Dataset list maker is going to run in 10 sec.")
-    time.sleep(10)
+    print("Dataset list maker is going to run")
 
     dataset_name = 'BRIND'
     if use_all_data:
