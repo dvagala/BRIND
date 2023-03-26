@@ -111,15 +111,28 @@ for filename in os.listdir(input_dir):
                     gt_img = gt_img.transpose(Image.FLIP_LEFT_RIGHT)
 
                 # Rotation by multiple angles
-                angle = random.randint(-45, 45)
+                angle = random.randint(0, 360)
                 img = rotate_without_black_borders(img, angle)
                 gt_img = rotate_without_black_borders(gt_img, angle)
 
                 opencvImage = cv2.cvtColor(numpy.array(img), cv2.COLOR_RGB2HSV)
                 h,s,v = cv2.split(opencvImage)
-                hue_new = numpy.clip(h + random.uniform(-180, 180), 0, 180).astype(numpy.uint8)
-                sat_new = numpy.clip(s + random.uniform(-15, 15), 0, 255).astype(numpy.uint8)
-                val_new = numpy.clip(v + random.uniform(-50, 50), 0, 255).astype(numpy.uint8)
+
+                if random.random() < 0.5:
+                    hue_new = h + numpy.clip(h + random.uniform(-180, 180), 0, 180).astype(numpy.uint8)
+                else:
+                    hue_new = h
+
+                if random.random() < 0.5:
+                    sat_new = numpy.clip(s + random.uniform(-15, 15), 0, 255).astype(numpy.uint8)
+                else:
+                    sat_new = s
+
+                if random.random() < 0.5:
+                    val_new = numpy.clip(v + random.uniform(-50, 50), 0, 255).astype(numpy.uint8)
+                else:
+                    val_new = v
+
                 bgr_new = cv2.cvtColor(cv2.merge([hue_new, sat_new, val_new]), cv2.COLOR_HSV2BGR)
                 img = Image.fromarray(bgr_new)
 
