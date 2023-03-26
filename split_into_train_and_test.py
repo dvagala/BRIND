@@ -42,7 +42,7 @@ input_images = [f for f in os.listdir(path_to_input_images) if f.endswith(".jpg"
 random.shuffle(input_images)
 
 parser = argparse.ArgumentParser(description='')
-parser.add_argument('train_test_ratio', type=int, help='train_test_ratio')
+parser.add_argument('train_test_ratio', type=float, help='train_test_ratio')
 args = parser.parse_args()
 
 # Split the input images into train and test sets
