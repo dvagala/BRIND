@@ -92,7 +92,11 @@ parser = argparse.ArgumentParser(description='')
 parser.add_argument('aug_number_per_image', type=int, help='how many augmented images to generate per image')
 args = parser.parse_args()
 
-for filename in os.listdir(input_dir):
+all_input_image_files = os.listdir(input_dir)
+for (idx, filename) in enumerate(all_input_image_files):
+    if idx % 10 == 0:
+        print(f'augmenting {idx}/{len(all_input_image_files)}')
+
     if filename.endswith('.jpg') or filename.endswith('.jpeg'):
         input_path = os.path.join(input_dir, filename)
         ground_truth_path = os.path.join(ground_truth_dir, f'{filename[:-4]}.png')
