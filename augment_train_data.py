@@ -122,15 +122,15 @@ for (idx, filename) in enumerate(all_input_image_files):
                 opencvImage = cv2.cvtColor(numpy.array(img), cv2.COLOR_RGB2HSV)
                 h,s,v = cv2.split(opencvImage)
 
-                if random.random() < 0.5:
-                    hue_new = h + numpy.clip(h + random.uniform(-180, 180), 0, 180).astype(numpy.uint8)
-                else:
-                    hue_new = h
+                # if random.random() < 0.5:
+                #     hue_new = h + numpy.clip(h + random.uniform(-180, 180), 0, 180).astype(numpy.uint8)
+                # else:
+                hue_new = h
 
-                if random.random() < 0.5:
-                    sat_new = numpy.clip(s + random.uniform(-15, 15), 0, 255).astype(numpy.uint8)
-                else:
-                    sat_new = s
+                # if random.random() < 0.5:
+                #     sat_new = numpy.clip(s + random.uniform(-15, 15), 0, 255).astype(numpy.uint8)
+                # else:
+                sat_new = s
 
                 if random.random() < 0.5:
                     val_new = numpy.clip(v + random.uniform(-50, 50), 0, 255).astype(numpy.uint8)
